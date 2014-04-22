@@ -7,8 +7,8 @@
     <ProjectGuid>{11C1A54E-54D0-4890-A9DD-2FEE2022A3CE}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BailerMethod</RootNamespace>
-    <AssemblyName>BailerMethod</AssemblyName>
+    <RootNamespace>BailerBuilder</RootNamespace>
+    <AssemblyName>BailerBuilder</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <PublishUrl>publish\</PublishUrl>
