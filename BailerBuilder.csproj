@@ -51,7 +51,7 @@
     <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>BailerMethod.Program</StartupObject>
+    <StartupObject>BailerBuilder.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
