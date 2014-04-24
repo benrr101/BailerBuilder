@@ -7,8 +7,16 @@ namespace BailerBuilder
     class OctahedralComplex : ICloneable, IEquatable<OctahedralComplex>
     {
 
-        #region MemberVariables
-
+        #region Properties
+        
+        /// <summary>
+        /// Internal representation of the ligands.
+        /// </summary>
+        /// <remarks>
+        /// Despite a list being relatively expensive compared to native
+        /// arrays, this type is used to enable arbitrary removal and insertion
+        /// which is necessary for generating all the isomers.
+        /// </remarks>
         List<string> _ligands = new List<string> {null, null, null, null, null, null};
 
         public string A
@@ -43,11 +51,18 @@ namespace BailerBuilder
             set { _ligands[5] = value; }
         }
 
+        /// <summary>
+        /// Whether or not the complex is chiral. This is checked by looking
+        /// for trans ligand pairs (which imply axial mirror planes) and
+        /// dihedral mirror planes.
+        /// </summary>
         public bool Chiral
         {
             get
             {
-                return !(A == B || C == D || E == F);
+                return
+                    !(A == B || C == D || E == F || (A == C && B == D) || (C == E && D == F) || (A == E && B == F) ||
+                      (A == D && B == C) || (C == F && D == E) || (A == F && B == E));
             }
         }
 
@@ -115,26 +130,6 @@ namespace BailerBuilder
             return results;
         }
 
-        private OctahedralComplex[] PermutateComplex()
-        {
-            OctahedralComplex[] results = new OctahedralComplex[2];
-            // Permutation 1: Swap D and E
-            OctahedralComplex perm1 = (OctahedralComplex) Clone();
-            string temp = perm1.D;
-            perm1.D = perm1.E;
-            perm1.E = temp;
-            results[0] = perm1;
-
-            // Permutation 2: Swap E and C
-            OctahedralComplex perm2 = (OctahedralComplex) perm1.Clone();
-            temp = perm2.C;
-            perm2.C = perm2.E;
-            perm2.E = temp;
-            results[1] = perm2;
-
-            return results;
-        } 
-
         #endregion
 
         #region Instance Members
@@ -177,10 +172,43 @@ namespace BailerBuilder
             return clone;
         }
 
+        /// <summary>
+        /// Performs the Bailer method transformations to the current complex.
+        /// This also involves cloning the existing complexes.
+        /// </summary>
+        /// <returns>
+        /// An array of two OctahedralComplexes that are permutations of the
+        /// original complex.
+        /// </returns>
+        private OctahedralComplex[] PermutateComplex()
+        {
+            OctahedralComplex[] results = new OctahedralComplex[2];
+            // Permutation 1: Swap D and E
+            OctahedralComplex perm1 = (OctahedralComplex)Clone();
+            string temp = perm1.D;
+            perm1.D = perm1.E;
+            perm1.E = temp;
+            results[0] = perm1;
+
+            // Permutation 2: Swap E and C
+            OctahedralComplex perm2 = (OctahedralComplex)perm1.Clone();
+            temp = perm2.C;
+            perm2.C = perm2.E;
+            perm2.E = temp;
+            results[1] = perm2;
+
+            return results;
+        } 
+
         #endregion
 
         #region IClonable Members
 
+        /// <summary>
+        /// Generates a new OctahedralComplex with the same ligand assignments
+        /// as the original.
+        /// </summary>
+        /// <returns>A new OctahedralComplex object that </returns>
         public object Clone()
         {
             return new OctahedralComplex()
@@ -197,11 +225,15 @@ namespace BailerBuilder
         #endregion
 
         #region IEquatable Members
+        
         /// <summary>
         /// Performs the proper comparison of octahedral complexes as per 
         /// Bailer's method: if both complexes have the same trans pairs, then
         /// the complexes are the same.
         /// </summary>
+        /// <remarks>
+        /// This will only work with complexes generated with the static method.
+        /// </remarks>
         /// <param name="a">The first complex to compare</param>
         /// <param name="b">The second complex to compare</param>
         /// <returns>True if the complexes have the same trans pairs, false otherwise.</returns>
@@ -214,11 +246,24 @@ namespace BailerBuilder
             return aTuples.OrderBy(i => i).SequenceEqual(bTuples.OrderBy(j => j));
         }
 
+        /// <summary>
+        /// Determines whether or not the current octahedral complex is equal
+        /// to the other octahedral complex. This actually just falls through
+        /// to the == operator
+        /// </summary>
+        /// <seealso cref="operator=="/>
+        /// <param name="other">The other octahedral complex to compare with</param>
+        /// <returns>Whether the complexes are the same or not</returns>
         public bool Equals(OctahedralComplex other)
         {
             return this == other;
         }
 
+        /// <summary>
+        /// Does object-level comparison of the two octahedral complexes.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
