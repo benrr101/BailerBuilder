@@ -30,40 +30,56 @@ namespace BailerBuilder
             Console.WriteLine("Compounds generated during this session will be stored in: {0}", fileName);
 
             // Generate the header for the file
-            outputWriter.Write(OctahedralComplex.GetFormatString());
+            outputWriter.WriteLine(OctahedralComplex.GetFormatString());
+            Console.WriteLine(OctahedralComplex.GetFormatString());
 
-            // Get the metal center and ligand list
-            Console.WriteLine("6 Ligands, comma separated: ");
-            string ligands = Console.ReadLine();
-            if (String.IsNullOrWhiteSpace(ligands))
+            // Start looping until we get an exit command
+            bool exit = false;
+            while (!exit)
             {
-                Console.WriteLine("*** 6 comma separated ligands must be provided");
-                return;
-            }
-            List<string> ligandList = new List<string>(ligands.Trim().Split(','));
-            if (ligandList.Count != 6)
-            {
-                Console.WriteLine("*** 6 comma separated ligands must be provided");
-                return;
-            }
 
-            // Do the magic! Generate the complexes
-            var results = OctahedralComplex.GenerateComplexes(ligandList);
+                // Get the metal center and ligand list
+                Console.WriteLine("Type 6 Ligands, comma separated (or type 'exit' to exit): ");
+                string ligands = Console.ReadLine();
+                if (ligands.Equals("exit", StringComparison.OrdinalIgnoreCase))
+                {
+                    exit = true;
+                    continue;
+                }
+                if (String.IsNullOrWhiteSpace(ligands))
+                {
+                    Console.WriteLine("*** 6 comma separated ligands must be provided");
+                    continue;
+                }
+                List<string> ligandList = new List<string>(ligands.Trim().Split(','));
+                if (ligandList.Count != 6)
+                {
+                    Console.WriteLine("*** 6 comma separated ligands must be provided");
+                    continue;
+                }
 
-            // Output the results
-            outputWriter.WriteLine("\n\nLigands Given: {0}", ligands);
-            string resultingString = String.Format("{0} Resulting Complexes ({1} Eantiomer Pairs):", results.Count, results.Count(i => i.Chiral) / 2);
-            Console.WriteLine();
-            Console.WriteLine(resultingString);
-            outputWriter.WriteLine(resultingString);
+                // Do the magic! Generate the complexes
+                var results = OctahedralComplex.GenerateComplexes(ligandList);
 
-            foreach (var complex in results)
-            {
-                Console.WriteLine(complex);
-                outputWriter.WriteLine(complex);
+                // Output the results
+                outputWriter.WriteLine();
+                outputWriter.WriteLine("---");
+                outputWriter.WriteLine("Ligands Given: {0}", ligands);
+                string resultingString = String.Format("{0} Resulting Complexes ({1} Eantiomer Pairs):", results.Count,
+                    results.Count(i => i.Chiral)/2);
+                Console.WriteLine();
+                Console.WriteLine(resultingString);
+                outputWriter.WriteLine(resultingString);
+
+                foreach (var complex in results)
+                {
+                    Console.WriteLine(complex);
+                    outputWriter.WriteLine(complex);
+                }
+
+                Console.WriteLine();
+                Console.WriteLine();
             }
-            Console.WriteLine("Press enter to exit.");
-            Console.ReadLine();
 
             outputWriter.Close();
             outputFile.Close();
