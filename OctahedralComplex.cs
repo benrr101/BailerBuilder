@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace BailerBuilder
 {
@@ -128,6 +129,19 @@ namespace BailerBuilder
             }
 
             return results;
+        }
+
+        public static string GetFormatString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("Ligand Assignment Format:");
+            sb.AppendLine(@"  F  A  C");
+            sb.AppendLine(@"   \ | / ");
+            sb.AppendLine(@"     M   ");
+            sb.AppendLine(@"   / | \ ");
+            sb.AppendLine(@"  D  B  E");
+
+            return sb.ToString();
         }
 
         #endregion
