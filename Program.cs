@@ -46,7 +46,7 @@ namespace BailerBuilder
                     exit = true;
                     continue;
                 }
-                if (String.IsNullOrWhiteSpace(ligands))
+                if (String.IsNullOrEmpty(ligands.Trim()))
                 {
                     Console.WriteLine("*** 6 comma separated ligands must be provided");
                     continue;

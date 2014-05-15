@@ -153,13 +153,13 @@ namespace BailerBuilder
         /// This is only provided to make finding duplicates marginally easier.
         /// </summary>
         /// <returns>List of tuples representing the trans pairs of the complex</returns>
-        private IEnumerable<Tuple<string, string>> GetTransPairTuples()
+        private IEnumerable<StringTuple> GetTransPairTuples()
         {
             return new[]
             {
-                new Tuple<string, string>(A, B),
-                new Tuple<string, string>(C, D),
-                new Tuple<string, string>(E, F)
+                new StringTuple(A, B),
+                new StringTuple(C, D),
+                new StringTuple(E, F)
             };
         }
 
